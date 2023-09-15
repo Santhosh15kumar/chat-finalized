@@ -2,7 +2,8 @@ const agentModel = require('../model/agent.js');
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const io = require('../socket.js')
+const server = require('../server.js');
+const initializeSocket = require('../socket.js');
 
 class agentController {
     async register(req,res){
@@ -34,6 +35,7 @@ class agentController {
             if(isPasswordMatched){
                 const jwtToken = jwt.sign({ agent: agent[0]._id }, 'MY_SECRET_TOKEN');
                 console.log(jwtToken);
+                const io = initializeSocket(server);
                 const chat = function(io) {
                     io.on('connection', (socket) => {
                         console.log('A agent connected to chat');

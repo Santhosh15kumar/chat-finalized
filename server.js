@@ -4,8 +4,7 @@ const mongoose = require('mongoose');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-
-const initializeSocket = require('./socket.js');
+module.exports = server;
 
 app.use(express.json());
 
@@ -32,13 +31,11 @@ process.on('SIGINT', () => {
 });
 
 
-const io = initializeSocket(server);
-
 const useRoute = require('./routes/index.js');
 app.use(useRoute);
 
 
-server.listen(8080, () => {
+app.listen(8080, () => {
     console.log("Server Running at http://localhost:8080");
 });
 

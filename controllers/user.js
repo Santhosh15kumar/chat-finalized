@@ -1,12 +1,13 @@
 const userModel = require('../model/user.js');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
-const { io } = require('../socket.js');
-
+const server = require('../server.js');
+const initializeSocket = require('../socket.js');
 class userController {
     async create(req, res){
         try{
             const {username, email, contactNo, service} = req.body;
+            
             const user = new userModel({
                 username: username,
                 email: email,
@@ -15,6 +16,7 @@ class userController {
             });
             await user.save();
             console.log(user);
+            const io = initializeSocket(server);
             const chat = function(io) {
                 io.on('connection', (socket) => {
                     console.log('A user connected to chat');
