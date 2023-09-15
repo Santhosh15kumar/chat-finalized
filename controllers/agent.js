@@ -18,9 +18,9 @@ class agentController {
             });
             await agent.save();
             console.log(agent);
-            return res.status(200).json({message: "agent Created Successfully", data: agent});
+            return res.status(200).json({message: "agent Created Successfully", data:agent, success:true});
         }catch(error){
-            console.log('Error@registeragent:',error);
+            console.log('Error@register:',error);
             return res.status(400).send({status: 400, success: false, message: error.message ? error.message : "Something went wrong"});
         }
     };
@@ -52,12 +52,12 @@ class agentController {
                     });
                 }
                 chat(io);
-                return res.header('Authorization', `Bearer ${jwtToken}`).status(200).json({message: 'Agent Login Successfully'});
+                return res.header('Authorization', `Bearer ${jwtToken}`).status(200).json({message: 'Agent Login Successfully', success: true});
             }else{
                 return res.status(404).json({message: error.message});
             }
         }catch(error){
-            console.log('Error@loginagent:', error);
+            console.log('Error@login:', error);
             return res.status(400).send({status: 400, success: false, message: error.message ? error.message : "Something went wrong"});
         }
     }

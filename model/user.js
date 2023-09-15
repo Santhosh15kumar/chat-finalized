@@ -18,7 +18,24 @@ const schema = new mongoose.Schema({
     service: {
         type: String,
         required: true
+    },
+    allMessageData: {
+        type: Array,
+        required: true
+    },
+    onlineStatus: {
+        type: Boolean,
+        required: true
+    },
+    clientIp: {
+        type: String,
+        required: true
+    },
+    browserInfo: {
+        type: Object,
+        required: true
     }
+    
 });
 
 const user = mongoose.model('Users', schema);
