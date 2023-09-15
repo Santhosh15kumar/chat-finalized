@@ -3,10 +3,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
 const http = require('http');
+const cors = require('cors');
 const server = http.createServer(app);
 module.exports = server;
 
+const corsOptions = {
+    origin: "http://localhost:4200",
+    methods: ["GET","POST"],
+}
+
 app.use(express.json());
+app.use(cors(corsOptions));
 
 const options = {useNewUrlParser: true, useUnifiedTopology: true}
 

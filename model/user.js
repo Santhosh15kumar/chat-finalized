@@ -24,7 +24,7 @@ const schema = new mongoose.Schema({
         required: true
     },
     onlineStatus: {
-        type: Boolean,
+        type: String,
         required: true
     },
     clientIp: {
