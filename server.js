@@ -4,22 +4,14 @@ const mongoose = require('mongoose');
 const app = express();
 const http = require('http');
 const cors = require('cors');
-const server = http.createServer(app);
+const server = http.createServer("http://localhost:3001");
 const socketIo = require('socket.io');
-const io = socketIo(server, {
-    cors: {
-        origin: "http://localhost:3000",
-        method: ["GET", "POST"],
-    },
-});
+const io = socketIo(server);
 
-const corsOptions = {
-    origin: "http://localhost:4200",
-    methods: ["GET","POST"],
-}
 
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(express.static('public'));
+app.use(cors());
 
 const options = {useNewUrlParser: true, useUnifiedTopology: true}
 
