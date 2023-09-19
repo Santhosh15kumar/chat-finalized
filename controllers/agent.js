@@ -35,21 +35,6 @@ class agentController {
             if(isPasswordMatched){
                 const jwtToken = jwt.sign({ agent: agent[0]._id }, 'MY_SECRET_TOKEN');
                 console.log(jwtToken);
-                const io = socketIo(server);
-                io.on('connection', (socket) => {
-                    console.log('A agent connected');
-
-                    const roomName = agent[0]._id;
-                    socket.join(roomName);
-
-                    socket.on('send_message', (message) => {
-                        socket.to(roomName).emit('receive_message', message);
-
-                    socket.on('disconnected', () => {
-                        console.log('An agent disconnected');
-                    });
-                    });
-                })
                 return res.header('Authorization', `Bearer ${jwtToken}`).status(200).json({message: 'Agent Login Successfully', success: true});
             }else{
                 return res.status(404).json({message: error.message});

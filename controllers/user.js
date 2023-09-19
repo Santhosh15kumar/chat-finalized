@@ -23,6 +23,22 @@ class userController {
             });
             await user.save();
             console.log(user);
+            const io = socketIo(server);
+            io.on('connection',(socket) => {
+                console.log('A user connected');
+
+                const roomName = user._id;
+                socket.join(roomName);
+
+                socket.on('send_message', (message) => {
+                    socket.to(roomName).emit('receive_message', message);
+                });
+                
+                socket.on('disconnected', () => {
+                    console.log('A user disconnected');
+                });
+
+            })
             return res.status(200).json({message: 'User created successfully', data: user, success:true});
         }catch(error){
             console.log("Error@create:", error);
