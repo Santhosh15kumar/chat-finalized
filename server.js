@@ -5,7 +5,8 @@ const app = express();
 const http = require('http');
 const cors = require('cors');
 const server = http.createServer(app);
-module.exports = server;
+const socketIo = require('socket.io');
+const io = socketIo(server);
 
 const corsOptions = {
     origin: "http://localhost:4200",
@@ -41,6 +42,14 @@ process.on('SIGINT', () => {
 
 const useRoute = require('./routes/index.js');
 app.use(useRoute);
+
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on('disconnected', () => {
+        console.log('A user disconnected');
+    });
+});
 
 
 app.listen(8080, () => {

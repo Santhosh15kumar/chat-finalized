@@ -1,8 +1,6 @@
 const userModel = require('../model/user.js');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
-const server = require('../server.js');
-const socketIo = require('socket.io');
 
 class userController {
     async create(req, res){
@@ -23,29 +21,13 @@ class userController {
             });
             await user.save();
             console.log(user);
-            const io = socketIo(server);
-            io.on('connection',(socket) => {
-                console.log('A user connected');
-
-                const roomName = user._id;
-                socket.join(roomName);
-
-                socket.on('send_message', (message) => {
-                    socket.to(roomName).emit('receive_message', message);
-                });
-                
-                socket.on('disconnected', () => {
-                    console.log('A user disconnected');
-                });
-
-            })
             return res.status(200).json({message: 'User created successfully', data: user, success:true});
         }catch(error){
             console.log("Error@create:", error);
             return res.status(400).send({status:400, success:false, message:error.message ? error.message : "Something went wrong"});
         }
     }
-
+ 
     async getAllUser(req,res){
         try{
             const users = await userModel.find();
