@@ -2,12 +2,15 @@ const userModel = require('../model/user.js');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const server = require('../server.js');
-const initializeSocket = require('../socket.js');
+const socketIo = require('socket.io');
+
 class userController {
     async create(req, res){
         try{
-            const {username, email, contactNo, service, allMessageData, onlineStatus, clientIp, browserInfo} = req.body;
-            
+            const {username, email, contactNo, service, allMessageData, onlineStatus} = req.body;
+            const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+            req.ipAddress = ipAddress;
+            req.browserInfo = req.headers['user-agent'];
             const user = new userModel({
                 username: username,
                 email: email,
@@ -15,28 +18,11 @@ class userController {
                 service: service,
                 allMessageData: allMessageData,
                 onlineStatus: onlineStatus,
-                clientIp: clientIp,
-                browserInfo: browserInfo
+                clientIp: req.ipAddress,
+                browserInfo: req.browserInfo
             });
             await user.save();
             console.log(user);
-            const io = initializeSocket(server);
-            const chat = function(io) {
-                io.on('connection', (socket) => {
-                    console.log('A user connected to chat');
-                    const roomName = user._id
-                    socket.join(roomName);
-
-                    socket.on("send_message", (message) => {
-                        socket.to(roomName).emit("receive_message", message);
-                    });
-
-                    socket.on('disconnect', () => {
-                        console.log("A user disconnected");
-                    });
-                });
-            }
-            chat(io);
             return res.status(200).json({message: 'User created successfully', data: user, success:true});
         }catch(error){
             console.log("Error@create:", error);

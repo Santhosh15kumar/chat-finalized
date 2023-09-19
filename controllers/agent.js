@@ -3,7 +3,7 @@ const agentModel = require('../model/agent.js');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const server = require('../server.js');
-const initializeSocket = require('../socket.js');
+const socketIo = require('socket.io');
 
 class agentController {
     async register(req,res){
@@ -35,23 +35,21 @@ class agentController {
             if(isPasswordMatched){
                 const jwtToken = jwt.sign({ agent: agent[0]._id }, 'MY_SECRET_TOKEN');
                 console.log(jwtToken);
-                const io = initializeSocket(server);
-                const chat = function(io) {
-                    io.on('connection', (socket) => {
-                        console.log('A agent connected to chat');
-                        const roomName = agent[0]._id
-                        socket.join(roomName);
-    
-                        socket.on("send_message", (message) => {
-                            socket.to(roomName).emit("receive_message", message);
-                        });
-    
-                        socket.on('disconnect', () => {
-                            console.log("An agent disconnected");
-                        });
+                const io = socketIo(server);
+                io.on('connection', (socket) => {
+                    console.log('A agent connected');
+
+                    const roomName = agent[0]._id;
+                    socket.join(roomName);
+
+                    socket.on('send_message', (message) => {
+                        socket.to(roomName).emit('receive_message', message);
+
+                    socket.on('disconnected', () => {
+                        console.log('An agent disconnected');
                     });
-                }
-                chat(io);
+                    });
+                })
                 return res.header('Authorization', `Bearer ${jwtToken}`).status(200).json({message: 'Agent Login Successfully', success: true});
             }else{
                 return res.status(404).json({message: error.message});

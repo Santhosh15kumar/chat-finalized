@@ -21,6 +21,7 @@ mongoose.connect(process.env.MONGO_URL, options);
 
 mongoose.connection.on('connected', () => {
     console.log('Mongoose connection is connected');
+    
 });
 
 mongoose.connection.on('error', (error) => {

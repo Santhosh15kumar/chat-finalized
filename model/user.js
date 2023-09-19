@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
+
 
 const schema = new mongoose.Schema({
     username: {
@@ -8,12 +10,27 @@ const schema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        validate: {
+            validator: function (email) {
+                const emailRegex = /^[a-zA-Z0-9,_-]+@[a-zA-Z0-9,-]+\.[a-zA-Z]{2,4}$/;
+                return emailRegex.test(email)
+            },
+            message: 'Invalid email format',
+        },
         
     },
     contactNo: {
         type: Number,
-        required: true
+        required: true,
+        unique: true,
+        validate: {
+            validator: function (contactNo) {
+                const contactRegex = /^\d{10}$/;
+                return contactRegex.test(contactNo);
+            },
+            message: 'phone number must have exactly 10 digits',
+        },
     },
     service: {
         type: String,
@@ -37,6 +54,8 @@ const schema = new mongoose.Schema({
     }
     
 });
+
+
 
 const user = mongoose.model('Users', schema);
 module.exports = user;
