@@ -4,10 +4,10 @@ const mongoose = require('mongoose');
 const app = express();
 const http = require('http');
 const cors = require('cors');
-const server = http.createServer("http://localhost:3001");
-const socketIo = require('socket.io');
-const io = socketIo(server);
-
+const server = http.createServer();
+//const socketIo = require('socket.io');
+//const io = socketIo(server);
+const initializeSocketIo = require('./socket.js')
 
 app.use(express.json());
 app.use(express.static('public'));
@@ -40,14 +40,11 @@ process.on('SIGINT', () => {
 const useRoute = require('./routes/index.js');
 app.use(useRoute);
 
-io.on('connection', (socket) => {
-    console.log('A user connected');
+initializeSocketIo(server);
 
-    socket.on('disconnected', () => {
-        console.log('A user disconnected');
-    });
-});
-
+server.listen(3001, () => {
+    console.log("Socket Server Running at http://localhost:3001");
+})
 
 app.listen(8080, () => {
     console.log("Server Running at http://localhost:8080");

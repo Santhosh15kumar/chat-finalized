@@ -2,8 +2,7 @@ const agentModel = require('../model/agent.js');
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const server = require('../server.js');
-const socketIo = require('socket.io');
+
 
 class agentController {
     async register(req,res){
