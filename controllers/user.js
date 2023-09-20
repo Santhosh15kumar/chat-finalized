@@ -54,11 +54,7 @@ class userController {
         try{
             const id  = req.params.id;
             const  onlineStatus  = req.body.onlineStatus;
-            //console.log(typeof onlineStatus);
-            //const user = await userModel.find({_id:req.params.id});
-            //console.log(user);
             const updateUserField = await userModel.updateOne({_id:req.params.id}, {$set: {onlineStatus:onlineStatus}});
-            //console.log(updateUserField);
             return res.status(200).json({message: 'changed Online status of the user', data: updateUserField, success:true});
         }catch(error){
             console.log("Error@changeOnlineStatus:", error);
@@ -71,7 +67,6 @@ class userController {
             const  id  = req.params.id;
             const  messageArray  = req.body.messageArray;
             const updateUserField = await userModel.updateOne({_id: id}, {$set: {allMessageData: messageArray}});
-            //console.log(updateUserField);
             return res.status(200).json({message: 'changed allMessageData of the user', data: updateUserField, success:true});
         }catch(error){
             console.log("Error@updateMessageArray:", error);

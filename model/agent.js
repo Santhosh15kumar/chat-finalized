@@ -21,7 +21,6 @@ const schema = new mongoose.Schema({
         required: true,
         validate: {
           validator: function (password) {
-            // Password should contain at least 1 special character, 1 number, and 1 letter
             password  = password.trim();
             const specialCharRegex = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\]/;
             const numberRegex = /[0-9]/;

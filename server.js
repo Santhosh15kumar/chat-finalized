@@ -5,8 +5,7 @@ const app = express();
 const http = require('http');
 const cors = require('cors');
 const server = http.createServer();
-//const socketIo = require('socket.io');
-//const io = socketIo(server);
+
 const initializeSocketIo = require('./socket.js')
 
 app.use(express.json());
